@@ -61,7 +61,7 @@ qualities = [("1080p", 1), ("720p", 2), ("", 5)]
 kickass_feed = "{4}/usearch/{0}%20{1}%20category%3Atv%20seeds%3A{2}{3}%20age%3Amonth/?field=seeders&sorder=desc&rss=1"
 
 confdoc = """# flexgen config file
-#
+# https://github.com/sideeffffect/flexgen
 #
 # waitForQuality       the video quality to wait for
 #                      1080p or 720p
@@ -114,14 +114,21 @@ if not os.path.exists(configFileName):
   sys.stderr.write("flexgen config file does not exist, writing default configuration to {0}\n".format(configFileName))
   writeConfig(confDictDefault)
 
-configFileHandle = open(configFileName, 'r')
-confdictread = yaml.load(configFileHandle)
-if confdictread is None:
+def handleBadFormat():
   sys.stderr.write("Wrong format of {0}, renaming it...\n".format(configFileName))
   os.rename(configFileName,
             "{0}.{1}".format(configFileName, datetime.datetime.today().strftime("%Y_%m_%d__%H_%M_%S")))
   writeConfig(confDictDefault)
   confdictread = dict()
+
+configFileHandle = open(configFileName, 'r')
+confdictread = dict()
+try:
+  confdictread = yaml.load(configFileHandle)
+except yaml.parser.ParserError:
+  handleBadFormat()
+if confdictread is None:
+  handleBadFormat()
 
 def unify(d1, d2):
   return dict(list(d1.items()) + list(d2.items()))
