@@ -33,7 +33,7 @@ Sample config file `~/.config/flexgen.yml` with comments
 
 ```
 # flexgen config file
-#
+# https://github.com/sideeffffect/flexgen
 #
 # waitForQuality       the video quality to wait for
 #                      1080p or 720p
@@ -56,7 +56,7 @@ Sample config file `~/.config/flexgen.yml` with comments
 #                      names should adhere to http://thetvdb.com/
 #
 
-rapidpushApiKey: 64 characters, not specified
+rapidpushApiKey: keyNotSpecified
 shows:
 - Pioneer One
 - My Favorite Show
