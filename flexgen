@@ -98,10 +98,10 @@ confDictDefault = {
   ]
 }
 
-configFileName = "~/.config/flexgen.yml"
+configFileName = os.path.expanduser("~/.config/flexgen.yml")
 
 def writeConfig(conf):
-  configfile = open(os.path.expanduser(configFileName), 'w')
+  configfile = open(configFileName, 'w')
   configfile.write(confdoc)
   configfile.write(yaml.dump(conf, default_flow_style=False, width=99999999))
   configfile.write("\n")
@@ -110,16 +110,16 @@ def writeConfig(conf):
 if not os.path.exists(os.path.expanduser("~/.config")):
   sys.stderr.write(os.path.expanduser("~/.config directory does not exist, creating it\n"))
   os.mkdir(os.path.expanduser("~/.config"))
-if not os.path.exists(os.path.expanduser(configFileName)):
-  sys.stderr.write("flexgen config file does not exist, writing default configuration to {0}".format(os.path.expanduser("~/.config does not exist\n")))
+if not os.path.exists(configFileName):
+  sys.stderr.write("flexgen config file does not exist, writing default configuration to {0}\n".format(configFileName))
   writeConfig(confDictDefault)
 
-configFileHandle = open(os.path.expanduser(configFileName), 'r')
+configFileHandle = open(configFileName, 'r')
 confdictread = yaml.load(configFileHandle)
 if confdictread is None:
   sys.stderr.write("Wrong format of {0}, renaming it...\n".format(configFileName))
-  os.rename(os.path.expanduser(configFileName),
-            os.path.expanduser("{0}.{1}".format(configFileName, datetime.datetime.today().strftime("%Y_%m_%d__%H_%M_%S"))))
+  os.rename(configFileName,
+            "{0}.{1}".format(configFileName, datetime.datetime.today().strftime("%Y_%m_%d__%H_%M_%S")))
   writeConfig(confDictDefault)
   confdictread = dict()
 
