@@ -1,0 +1,330 @@
+#!/usr/bin/env python3
+#
+# flexgen generates sophisticated FlexGet configuration for a given list of TV shows
+#
+# Copyright (c) 2014 Ondra Pelech
+# license GPL-3.0+
+#
+# https://github.com/sideeffffect/flexgen
+#
+
+import urllib.parse
+import re
+import yaml
+import functools
+import os
+import sys
+import datetime
+
+exactSubsMatch = True
+seeds = 5
+timedeltadays = 30
+reject = sorted(["1080i", "720i", "season", "trailer", "screener", "TS", "Cam", "RAW", "R5", "WEBSCR", "WEBsct", "3D"])
+content_require = sorted(["*.mkv", "*.mp4"])
+content_reject = sorted(["*password*", "*.avi", "*.wmv", "*.mpg", "*.r0*", "*.part0*"])
+free_space = 20000
+require_field = sorted(["quality", "tvdb_id", "tvdb_series_name", "tvdb_ep_id"])
+reject_for = "90 minutes"
+domain_delay = "5 seconds"
+destination = "~/Downloads"
+titleValue = "|\n        {{ tvdb_series_name }} - {{ tvdb_ep_id }}\n        {{ quality }}"
+domains = sorted([
+"kickass.to",
+"ezrss.it",
+"feeds.feedburner.com",
+"rss.bt-chat.com",
+"rapidpush.net",
+"katproxy.com",
+"kickass.to.prx.websiteproxy.co.uk",
+"tracker.openbittorrent.com",
+"tracker.publicbt.com",
+"tracker.istole.it",
+"open.demonii.com",
+"inferno.demonoid.ph",
+"9.rarbg.com"
+])
+trackers = sorted([
+"udp://tracker.openbittorrent.com:80/announce",
+"udp://tracker.publicbt.com:80/announce",
+"udp://tracker.istole.it:80/announce",
+"udp://open.demonii.com:1337",
+"http://inferno.demonoid.ph:3389/announce",
+"http://9.rarbg.com:2710/announce"
+])
+kickass_proxies = [
+"https://kickass.to",
+"http://katproxy.com",
+"https://kickass.to.prx.websiteproxy.co.uk"
+]
+
+qualities = [("1080p", 1), ("720p", 2), ("", 5)]
+kickass_feed = "{4}/usearch/{0}%20{1}%20category%3Atv%20seeds%3A{2}{3}%20age%3Amonth/?field=seeders&sorder=desc&rss=1"
+
+confdoc = """# flexgen config file
+#
+#
+# waitForQuality       the video quality to wait for
+#                      1080p or 720p
+#                      http://flexget.com/wiki/Plugins/quality
+#
+# waitingTime          time to wait before resorting to a worse quality video
+#                      "6 days", "13 hours", and so on
+#                      http://flexget.com/wiki/Plugins/series/timeframe
+#
+# subtitleLanguage     language for subtitles to download
+#                      3 character code
+#                      https://en.wikipedia.org/wiki/ISO_639-3
+#
+# rapidpushApiKey      API key for the RapidPush service
+#                      64 alphanumeric characters
+#                      https://rapidpush.net/
+#
+# shows                comma separated list of shows
+#                      put here the names of the TV shows that you want to be torrenting
+#                      names should adhere to http://thetvdb.com/
+#
+
+"""
+
+confDictDefault = {
+  'waitForQuality'   : "1080p",
+  'waitingTime'      : "6 days",
+  'subtitleLanguage' : "eng",
+  'rapidpushApiKey'  : "keyNotSpecified",
+  'shows'            : [
+    "Pioneer One",
+    "My Favorite Show",
+    "Another TV Show"
+  ]
+}
+
+configFileName = "~/.config/flexgen.yml"
+
+def writeConfig(conf):
+  configfile = open(os.path.expanduser(configFileName), 'w')
+  configfile.write(confdoc)
+  configfile.write(yaml.dump(conf, default_flow_style=False, width=99999999))
+  configfile.write("\n")
+  configfile.close()
+
+if not os.path.exists(os.path.expanduser("~/.config")):
+  sys.stderr.write(os.path.expanduser("~/.config directory does not exist, creating it\n"))
+  os.mkdir(os.path.expanduser("~/.config"))
+if not os.path.exists(os.path.expanduser(configFileName)):
+  sys.stderr.write("flexgen config file does not exist, writing default configuration to {0}".format(os.path.expanduser("~/.config does not exist\n")))
+  writeConfig(confDictDefault)
+
+configFileHandle = open(os.path.expanduser(configFileName), 'r')
+confdictread = yaml.load(configFileHandle)
+if confdictread is None:
+  sys.stderr.write("Wrong format of {0}, renaming it...\n".format(configFileName))
+  os.rename(os.path.expanduser(configFileName),
+            os.path.expanduser("{0}.{1}".format(configFileName, datetime.datetime.today().strftime("%Y_%m_%d__%H_%M_%S"))))
+  writeConfig(confDictDefault)
+  confdictread = dict()
+
+def unify(d1, d2):
+  return dict(list(d1.items()) + list(d2.items()))
+
+confdict = unify(confDictDefault, confdictread)
+
+def isWrong(item, ty, reqLen):
+  return (type(confdict[item]) is not ty) or reqLen(len(confdict[item]))
+
+def overrideWrong(item, ty, reqLen):
+  if isWrong(item, ty, reqLen):
+    confdict[item] = confDictDefault[item]
+
+overrideWrong('waitForQuality', str, lambda x: x < 1)
+overrideWrong('waitingTime', str, lambda x: x < 1)
+overrideWrong('subtitleLanguage', str, lambda x: x != 3)
+overrideWrong('shows', list, lambda x: x < 1)
+
+confdict['shows'] = sorted([show.title() for show in list(set([show.lower() for show in confdict['shows']]))])
+
+templates = {
+  'templates': {
+    'global': {
+      'series': {
+        'defaultGroup': confdict['shows'],
+        'settings': {
+          'defaultGroup': {
+            'quality': '!1080i !720i',
+            'target': confdict['waitForQuality'],
+            'timeframe': confdict['waitingTime']
+          }
+        }
+      },
+      'free_space': {
+        'path': "/home",
+        'space': free_space
+      },
+      'content_filter': {
+        'require': content_require,
+        'reject': content_reject
+      },
+      'regexp': {
+        'reject': [{"\b{0}\b".format(r) : {'from': 'title'}} for r in reject]
+      },
+      'require_field': require_field,
+      'content_size': {
+        'min': 10,
+        'max': 10000,
+        'strict': False
+      },
+      'if': [
+        {"(tvdb_ep_air_date is not None) and (tvdb_ep_air_date < now - timedelta(days={0}))".format(timedeltadays): 'reject'}
+      ],
+      'pathscrub': "windows",
+      'magnets': False,
+      'add_trackers': trackers,
+      'torrent_alive': {
+        'min_seeds': seeds,
+        'reject_for': reject_for
+      },
+      'thetvdb_lookup': True,
+      'deluge': {
+        'content_filename':
+          '{{ tvdb_series_name | replace("/", " - ") | replace(";", ",")                                   }} - '
+          '{{ tvdb_ep_id       | replace("/", " - ") | replace(";", ",")                                   }} - '
+          '{{ tvdb_ep_name     | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
+          '{{ quality          | replace("/", " - ") | replace(";", ",")                                   }}',
+        'main_file_only': True,
+        'movedone': destination
+      },
+      'domain_delay': {
+        d: domain_delay for d in domains
+      }
+    }
+  }
+}
+
+rapidpush = {
+  'title': 'titleValue',
+  'message':
+    '{% if tvdb_banner_url is defined %}'
+      '<a href="http://thetvdb.com/?tab=series&id={{ tvdb_id }}">'
+        '<img src="{{ tvdb_banner_url }}" width="100%"/>'
+      '</a>'
+      '<br/>'
+    '{% else %}'
+      '<p align="center">'
+        '<i>Series banner not available</i>'
+      '</p>'
+    '{% endif %}'
+    '<table border="0" width="100%">'
+      '<tr>'
+        '<td>Name: </td>'
+        '<td align="right">{{ tvdb_ep_name | default("-") }} <br/></td>'
+      '</tr>'
+      '<tr>'
+        '<td>Air date: </td>'
+        '<td align="right">{{ tvdb_ep_air_date.strftime("%A, %-d %B") | default("-") }} <br/></td>'
+      '</tr>'
+      '<tr>'
+        '<td>Delay: </td>'
+        '<td align="right">{% if tvdb_ep_air_date is defined %}{{ (now - tvdb_ep_air_date).days }} days ago{% else %}-{% endif %} <br/></td>'
+      '</tr>'
+      '<tr>'
+        '<td>Runtime: </td>'
+        '<td align="right">{% if tvdb_runtime is defined %}{{ tvdb_runtime }} minutes{% else %}-{% endif %} <br/></td>'
+      '</tr>'
+      '<tr>'
+        '<td>Rating: </td>'
+        '<td align="right">{{ tvdb_ep_rating if tvdb_ep_rating != 0.0 else "-" | default("-") }} <br/></td>'
+      '</tr>'
+    '</table>'
+    '{% if tvdb_ep_image_url is defined %}'
+      '<img src="{{ tvdb_ep_image_url }}" width="100%"/>'
+      '<br/>'
+    '{% else %}'
+      '<p align="center">'
+        '<i>Episode image not available</i>'
+      '</p>'
+    '{% endif %}'
+    '<p align="center">'
+      '<a href="https://torrentz.eu/{{ torrent_info_hash | lower}}" target="_blank">'
+        '<img src="https://kickass.to/torrentwidget/{{ torrent_info_hash | upper}}.png" width="100%"/>'
+        '<br/>'
+        '<img src="http://bitsnoop.com/api/fakeskan.php?img=1&hash={{ torrent_info_hash | upper}}" width="100%"/>'
+      '</a>'
+      '<br/>'
+      '{{ task }}'
+      '<br/>'
+      '<font face="Droid Sans Mono" size="0.5">'
+        '{{ title }}'
+      '</font>'
+      '<br/>'
+      '<font face="Droid Sans Mono">'
+        '{{ content_size | round | int }} MB'
+      '</font>'
+    '</p>'
+}
+
+tasks_static = {
+  '3_EZTV_ezRSS': {
+    'rss': "https://ezrss.it/feed/",
+    'priority': 3
+  },
+  '3_EZTV_Feedburner': {
+    'rss': "http://feeds.feedburner.com/eztv-rss-atom-feeds?format=xml",
+    'priority': 3
+  },
+  '3_EZTV_BTChat': {
+    'rss': "http://rss.bt-chat.com/?group=3",
+    'priority': 3
+  },
+  '4_BTChat': {
+    'rss': "http://rss.bt-chat.com/?group=230&cat=9",
+    'priority': 4
+  },
+  '6_SubtitleDownload': {
+    'priority': 6,
+    'template': "no_global",
+    'disable_builtins': True,
+    'find': {
+      'path': [destination],
+      'regexp': ".*\.(mkv|mp4)$",
+      'recursive': False
+    },
+    'accept_all': True,
+    'subliminal': {
+      'languages': [confdict['subtitleLanguage']],
+      'alternatives': ["eng"],
+      'exact_match': exactSubsMatch
+    }
+  }
+}
+
+def qtype(quality):
+  if quality == "":
+    return "TV"
+  else:
+    return quality
+
+def genTask(show, quality, priority):
+  return {
+    '{0}_{1}_{2}'.format(priority, qtype(quality), re.sub(r'\s', '', show)): {
+      'rss': kickass_feed.format(urllib.parse.quote(show), quality, seeds, ''.join([urllib.parse.quote(" -") + x for x in reject]), kickass_proxies[0]),
+      'priority': priority
+    }
+  }
+
+tasks_dynamic = functools.reduce(unify, [genTask(show, quality[0], quality[1]) for show in confdict['shows'] for quality in qualities])
+
+tasks = {
+  'tasks' : unify(tasks_static, tasks_dynamic)
+}
+
+config = unify(templates, tasks)
+
+
+if (type(confdict['rapidpushApiKey']) is str) and (len(confdict['rapidpushApiKey']) == 64):
+  rapidpush['apikey'] = confdict['rapidpushApiKey']
+  config['templates']['global']['rapidpush'] = rapidpush
+else:
+  sys.stderr.write("Not using rapidpush, '{0}' is not an rapidpushApiKey.\n".format(confdict['rapidpushApiKey']))
+
+
+print(yaml.dump(config, default_flow_style=False, width=99999999).replace('titleValue', titleValue))
+
