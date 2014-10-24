@@ -160,7 +160,8 @@ templates = {
             'target': confdict['waitForQuality'],
             'timeframe': confdict['waitingTime']
           }
-        }
+        },
+        'identified_by': ['ep']
       },
       'free_space': {
         'path': "/home",
