@@ -28,21 +28,25 @@ reject_for = "90 minutes"
 domain_delay = "5 seconds"
 destination = "~/Downloads"
 titleValue = "|\n        {{ tvdb_series_name }} - {{ tvdb_ep_id }}\n        {{ quality }}"
+kickassServersIndex = 3
+kickassServers = [
+("https://", "kickass.to"),
+("http://" , "katproxy.com"),
+("https://", "kickass.to.prx.websiteproxy.co.uk"),
+("http://", "kickass.so")
+]
 domains = sorted([
-"kickass.to",
 "ezrss.it",
 "feeds.feedburner.com",
 "rss.bt-chat.com",
 "rapidpush.net",
-"katproxy.com",
-"kickass.to.prx.websiteproxy.co.uk",
 "tracker.openbittorrent.com",
 "tracker.publicbt.com",
 "tracker.istole.it",
 "open.demonii.com",
 "inferno.demonoid.ph",
 "9.rarbg.com"
-])
+] + [ks[1] for ks in kickassServers])
 trackers = sorted([
 "udp://tracker.openbittorrent.com:80/announce",
 "udp://tracker.publicbt.com:80/announce",
@@ -51,14 +55,9 @@ trackers = sorted([
 "http://inferno.demonoid.ph:3389/announce",
 "http://9.rarbg.com:2710/announce"
 ])
-kickass_proxies = [
-"https://kickass.to",
-"http://katproxy.com",
-"https://kickass.to.prx.websiteproxy.co.uk"
-]
 
 qualities = [("1080p", 1), ("720p", 2), ("", 5)]
-kickass_feed = "{4}/usearch/{0}%20{1}%20category%3Atv%20seeds%3A{2}{3}%20age%3Amonth/?field=seeders&sorder=desc&rss=1"
+kickass_feed = "{0}{1}/usearch/{2}%20{3}%20category%3Atv%20seeds%3A{4}{5}%20age%3Amonth/?field=seeders&sorder=desc&rss=1"
 
 confdoc = """# flexgen config file
 # https://github.com/sideeffffect/flexgen
@@ -252,7 +251,7 @@ rapidpush = {
     '{% endif %}'
     '<p align="center">'
       '<a href="https://torrentz.eu/{{ torrent_info_hash | lower}}" target="_blank">'
-        '<img src="https://kickass.to/torrentwidget/{{ torrent_info_hash | upper}}.png" width="100%"/>'
+        '<img src="' + kickassServers[kickassServersIndex][0] + kickassServers[kickassServersIndex][1] + '/torrentwidget/{{ torrent_info_hash | upper}}.png" width="100%"/>'
         '<br/>'
         '<img src="http://bitsnoop.com/api/fakeskan.php?img=1&hash={{ torrent_info_hash | upper}}" width="100%"/>'
       '</a>'
@@ -313,7 +312,13 @@ def qtype(quality):
 def genTask(show, quality, priority):
   return {
     '{0}_{1}_{2}'.format(priority, qtype(quality), re.sub(r'\s', '', show)): {
-      'rss': kickass_feed.format(urllib.parse.quote(show), quality, seeds, ''.join([urllib.parse.quote(" -") + x for x in reject]), kickass_proxies[0]),
+      'rss': kickass_feed.format( kickassServers[kickassServersIndex][0]
+                                , kickassServers[kickassServersIndex][1]
+                                , urllib.parse.quote(show)
+                                , quality
+                                , seeds
+                                , ''.join([urllib.parse.quote(" -") + x for x in reject])
+                                ),
       'priority': priority
     }
   }
