@@ -192,11 +192,11 @@ templates = {
       'thetvdb_lookup': True,
       'deluge': {
         'content_filename':
-          '{{ tvdb_series_name | replace("/", " - ") | replace(";", ",")                                   }}/'
-          'S{{ series_season   | replace("/", " - ") | replace(";", ",")                                   }}/'
-          'E{{ series_episode  | replace("/", " - ") | replace(";", ",")                                   }} - '
-          '{{ tvdb_ep_name     | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
-          '{{ quality          | replace("/", " - ") | replace(";", ",")                                   }}',
+          '{{  tvdb_series_name | replace("/", " - ") | replace(";", ",")                                   }}/'
+          'S{{ tvdb_season      | replace("/", " - ") | replace(";", ",") | pad(2)                          }}/'
+          'E{{ tvdb_episode     | replace("/", " - ") | replace(";", ",") | pad(2)                          }} - '
+          '{{  tvdb_ep_name     | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
+          '{{  quality          | replace("/", " - ") | replace(";", ",")                                   }}',
         'main_file_only': True,
         'movedone': destination
       },
