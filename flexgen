@@ -26,7 +26,7 @@ free_space = 20000
 require_field = sorted(["quality", "tvdb_id", "tvdb_series_name", "tvdb_ep_id"])
 reject_for = "90 minutes"
 domain_delay = "5 seconds"
-destination = "~/Downloads"
+destination = "~/TVShows"
 titleValue = "|\n        {{ tvdb_series_name }} - {{ tvdb_ep_id }}\n        {{ quality }}"
 kickassServersIndex = 3
 kickassServers = [
@@ -78,7 +78,7 @@ confdoc = """# flexgen config file
 #                      64 alphanumeric characters
 #                      https://rapidpush.net/
 #
-# shows                comma separated list of shows
+# shows                list of shows
 #                      put here the names of the TV shows that you want to be torrenting
 #                      names should adhere to http://thetvdb.com/
 #
@@ -192,8 +192,9 @@ templates = {
       'thetvdb_lookup': True,
       'deluge': {
         'content_filename':
-          '{{ tvdb_series_name | replace("/", " - ") | replace(";", ",")                                   }} - '
-          '{{ tvdb_ep_id       | replace("/", " - ") | replace(";", ",")                                   }} - '
+          '{{ tvdb_series_name | replace("/", " - ") | replace(";", ",")                                   }}/'
+          'S{{ series_season   | replace("/", " - ") | replace(";", ",")                                   }}/'
+          'E{{ series_episode  | replace("/", " - ") | replace(";", ",")                                   }} - '
           '{{ tvdb_ep_name     | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
           '{{ quality          | replace("/", " - ") | replace(";", ",")                                   }}',
         'main_file_only': True,
@@ -291,8 +292,8 @@ tasks_static = {
     'disable_builtins': True,
     'find': {
       'path': [destination],
-      'regexp': ".*\.(mkv|mp4)$",
-      'recursive': False
+      'regexp': ".*\.(avi|mkv|mp4)$",
+      'recursive': True
     },
     'accept_all': True,
     'subliminal': {

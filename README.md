@@ -51,7 +51,7 @@ Sample config file `~/.config/flexgen.yml` with comments
 #                      64 alphanumeric characters
 #                      https://rapidpush.net/
 #
-# shows                comma separated list of shows
+# shows                list of shows
 #                      put here the names of the TV shows that you want to be torrenting
 #                      names should adhere to http://thetvdb.com/
 #
