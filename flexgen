@@ -194,6 +194,7 @@ templates = {
         'content_filename':
           '{{  tvdb_series_name | replace("/", " - ") | replace(";", ",")                                   }}/'
           'S{{ tvdb_season      | replace("/", " - ") | replace(";", ",") | pad(2)                          }}/'
+          'S{{ tvdb_season      | replace("/", " - ") | replace(";", ",") | pad(2)                          }}'
           'E{{ tvdb_episode     | replace("/", " - ") | replace(";", ",") | pad(2)                          }} - '
           '{{  tvdb_ep_name     | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
           '{{  quality          | replace("/", " - ") | replace(";", ",")                                   }}',
