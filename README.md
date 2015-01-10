@@ -20,7 +20,7 @@ add
 
 ```
 LANG=en_US.utf8
-@hourly flexgen > $HOME/.config/flexget/config.yml ; flexget --loglevel critical --logfile /dev/null execute 1> /dev/null 2>&1
+@hourly flexgen 1> $HOME/.config/flexget/config.yml 2> /dev/null ; flexget --loglevel critical --logfile /dev/null execute 1> /dev/null 2>&1
 ```
 
 Here I assume, that your `flexget` config file is in `$HOME/.config/flexget`, so change this part if necessary.
