@@ -203,6 +203,7 @@ templates = {
           '{{  tvdb_ep_name     | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
           '{{  quality          | replace("/", " - ") | replace(";", ",")                                   }}',
         'main_file_only': True,
+        'path': destination,
         'movedone': destination
       },
       'domain_delay': {
