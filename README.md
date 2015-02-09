@@ -8,7 +8,11 @@ Installation
 
 Install Python 3 and Deluge torrent client. Optionaly you can also use [RapidPush](https://rapidpush.net/) to get updates to your phone.
 
-Put `flexgen` in your `PATH`.
+Put `flexgen` in your `PATH`. Notice, that `pip` by default installs to `/usr/local/bin` which might not be in `PATH` in the invironment where `cron` runs. One way to solve this is to create a symlink:
+
+```
+sudo ln -s /usr/local/bin/flexget /usr/bin/flexget
+```
 
 Add new item to `crontab`:
 
@@ -67,9 +71,9 @@ waitingTime: 6 days
 ```
 
 
-Licensing
+License
 ------------
-Copyright (c) 2014 Ondra Pelech
+Copyright (c) 2014, 2015 Ondra Pelech
 
 License GPL-3.0+
 
