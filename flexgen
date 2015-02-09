@@ -267,6 +267,8 @@ rapidpush = {
       '<br/>'
       '<font face="Droid Sans Mono" size="0.5">'
         '{{ title }}'
+        '<br/>'
+        '{{ torrent_info_hash | lower}}'
       '</font>'
       '<br/>'
       '<font face="Droid Sans Mono">'
