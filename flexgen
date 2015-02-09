@@ -28,7 +28,7 @@ reject_for = "90 minutes"
 domain_delay = "5 seconds"
 destination = "~/TVShows"
 titleValue = "|\n        {{ tvdb_series_name }} - {{ tvdb_ep_id }}\n        {{ quality }}"
-kickassServersIndex = 3
+kickassServersIndex = 0
 kickassServers = [
 ("https://", "kickass.to"),
 ("http://" , "katproxy.com"),
