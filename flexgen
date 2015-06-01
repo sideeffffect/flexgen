@@ -195,6 +195,7 @@ templates = {
         'reject_for': reject_for
       },
       'thetvdb_lookup': True,
+      'imdb_lookup': True,
       'deluge': {
         'content_filename':
           '{{  tvdb_series_name | replace("/", " - ") | replace(";", ",")                                   }}/'
@@ -245,8 +246,8 @@ rapidpush = {
         '<td align="right">{% if tvdb_runtime is defined %}{{ tvdb_runtime }} minutes{% else %}-{% endif %} <br/></td>'
       '</tr>'
       '<tr>'
-        '<td>Rating: </td>'
-        '<td align="right">{{ tvdb_ep_rating if tvdb_ep_rating != 0.0 else "-" | default("-") }} <br/></td>'
+        '<td>Score: </td>'
+        '<td align="right">{{ imdb_score if imdb_score != 0.0 else "-" | default("-") }} <br/></td>'
       '</tr>'
     '</table>'
     '{% if tvdb_ep_image_url is defined %}'
