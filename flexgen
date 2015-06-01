@@ -28,12 +28,13 @@ reject_for = "90 minutes"
 domain_delay = "5 seconds"
 destination = "~/TVShows"
 titleValue = "|\n        {{ tvdb_series_name }} - {{ tvdb_ep_id }}\n        {{ quality }}"
-kickassServersIndex = 0
+kickassServersIndex = 4 
 kickassServers = [
 ("https://", "kickass.to"),
 ("http://" , "katproxy.com"),
 ("https://", "kickass.to.prx.websiteproxy.co.uk"),
 ("http://", "kickass.so")
+, ("https://", "kat.cr")
 ]
 domains = sorted([
 "ezrss.it",
@@ -329,6 +330,7 @@ def genTask(show, quality, priority):
                                 , ''.join([urllib.parse.quote(" -") + x for x in reject])
                                 ),
       'priority': priority
+      , 'verify_ssl_certificates': False
     }
   }
 
