@@ -19,7 +19,21 @@ import datetime
 exactSubsMatch = True
 seeds = 5
 timedeltadays = 30
-reject = sorted(["1080i", "720i", "season", "trailer", "screener", "TS", "Cam", "RAW", "R5", "WEBSCR", "WEBsct", "3D", "VOSTFR"])
+reject = sorted([ "1080i"
+                , "720i"
+                , "season"
+                , "trailer"
+                , "screener"
+                , "TS"
+                , "Cam"
+                , "RAW"
+                , "R5"
+                , "WEBSCR"
+                , "WEBsct"
+                , "3D"
+                , "VOSTFR"
+                , "HEVC"
+                ])
 content_require = sorted(["*.mkv", "*.mp4"])
 content_reject = sorted(["*password*", "*.avi", "*.wmv", "*.mpg", "*.r0*", "*.part0*"])
 free_space = 20000
