@@ -293,7 +293,7 @@ tasks_static = {
   '6_SubtitleDownload': {
     'priority': 6,
     'template': "no_global",
-    'disable_builtins': True,
+    'disable': "builtins",
     'find': {
       'path': [destination],
       'regexp': ".*\.(avi|mkv|mp4)$",
