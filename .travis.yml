@@ -5,8 +5,9 @@ install:
   - virtualenv $HOME/flexget/
   - cd $HOME/flexget
   - bin/pip install flexget
-script:
   - cd $TRAVIS_BUILD_DIR
+  - pip install -r requirements.txt
+script:
   - mkdir -p $HOME/.config/flexget
   - ./flexgen > $HOME/.config/flexget/config.yml
   - $HOME/flexget/bin/flexget check
