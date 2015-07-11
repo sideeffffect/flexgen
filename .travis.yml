@@ -1,6 +1,8 @@
 language: python
 python:
   - "3.4"
+install:
+  - pip2 install flexget
 script:
   - ./flexgen > $HOME/.config/flexget/config.yml
   - flexget check
