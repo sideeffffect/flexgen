@@ -347,5 +347,6 @@ else:
 
 print(yaml.dump(config, default_flow_style=False, width=99999999).replace('titleValue', titleValue))
 
-os.mkdir(os.path.expanduser(destination))
+if not os.path.exists(os.path.expanduser(destination)):
+  os.mkdir(os.path.expanduser(destination))
 
