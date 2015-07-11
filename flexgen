@@ -51,9 +51,6 @@ kickassServers = [
 , ("https://", "kat.cr")
 ]
 domains = sorted([
-"ezrss.it",
-"feeds.feedburner.com",
-"rss.bt-chat.com",
 "rapidpush.net",
 "tracker.openbittorrent.com",
 "tracker.publicbt.com",

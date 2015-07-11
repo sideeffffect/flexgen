@@ -1,5 +1,6 @@
 flexgen
 =======
+[![Build Status](https://travis-ci.org/sideeffffect/flexgen.svg)](https://travis-ci.org/sideeffffect/flexgen)
 
 flexgen generates sophisticated FlexGet configuration for a given list of TV shows.
 
