@@ -6,7 +6,7 @@ install:
   - cd ~/flexget
   - bin/pip install flexget
 script:
-  - mkdit -p $HOME/.config/flexget
+  - mkdir -p $HOME/.config/flexget
   - ./flexgen > $HOME/.config/flexget/config.yml
   - ~/flexget/bin/flexget check
 
