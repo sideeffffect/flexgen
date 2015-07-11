@@ -1,5 +1,7 @@
 language: python
 python:
   - "3.4"
-script: ./flexgen
+script:
+  - ./flexgen > $HOME/.config/flexget/config.yml
+  - flexget check
 
