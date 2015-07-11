@@ -293,22 +293,6 @@ rapidpush = {
 }
 
 tasks_static = {
-  '3_EZTV_ezRSS': {
-    'rss': "https://ezrss.it/feed/",
-    'priority': 3
-  },
-  '3_EZTV_Feedburner': {
-    'rss': "http://feeds.feedburner.com/eztv-rss-atom-feeds?format=xml",
-    'priority': 3
-  },
-  '3_EZTV_BTChat': {
-    'rss': "http://rss.bt-chat.com/?group=3",
-    'priority': 3
-  },
-  '4_BTChat': {
-    'rss': "http://rss.bt-chat.com/?group=230&cat=9",
-    'priority': 4
-  },
   '6_SubtitleDownload': {
     'priority': 6,
     'template': "no_global",
