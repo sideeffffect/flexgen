@@ -2,12 +2,12 @@ language: python
 python:
   - "3.4"
 install:
-  - virtualenv ~/flexget/
-  - cd ~/flexget
+  - virtualenv $HOME/flexget/
+  - cd $HOME/flexget
   - bin/pip install flexget
 script:
-  - cd $HOME/flexgen
+  - cd $TRAVIS_BUILD_DIR
   - mkdir -p $HOME/.config/flexget
   - ./flexgen > $HOME/.config/flexget/config.yml
-  - ~/flexget/bin/flexget check
+  - $HOME/flexget/bin/flexget check
 
