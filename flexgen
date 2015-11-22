@@ -33,7 +33,6 @@ reject = sorted([ "1080i"
                 , "3D"
                 , "VOSTFR"
                 , "HEVC"
-                , "h.265"
                 , "h265"
                 , "x265"
                 ])
