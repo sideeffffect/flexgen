@@ -44,13 +44,14 @@ reject_for = "90 minutes"
 domain_delay = "5 seconds"
 destination = "~/TVShows"
 titleValue = "|\n        {{ tvdb_series_name }} - {{ tvdb_ep_id }}\n        {{ quality }}"
-kickassServersIndex = 4 
+kickassServersIndex = 5
 kickassServers = [
 ("https://", "kickass.to"),
 ("http://" , "katproxy.com"),
 ("https://", "kickass.to.prx.websiteproxy.co.uk"),
 ("http://", "kickass.so")
 , ("https://", "kat.cr")
+, ("https://", "zooqle.com")
 ]
 domains = sorted([
 "rapidpush.net",
@@ -75,7 +76,7 @@ trackers = sorted([
 ])
 
 qualities = [("1080p", 1), ("720p", 2), ("", 5)]
-kickass_feed = "{0}{1}/usearch/{2}%20{3}%20category%3Atv%20seeds%3A{4}{5}%20age%3Amonth/?field=seeders&sorder=desc&rss=1"
+kickass_feed = "{0}{1}/search?q={2}+{3}+{5}+after%3A4W+category%3ATV&fmt=rss"
 
 confdoc = """# flexgen config file
 # https://github.com/sideeffffect/flexgen
@@ -271,9 +272,7 @@ rapidpush = {
       '</p>'
     '{% endif %}'
     '<p align="center">'
-      '<a href="https://torrentz.eu/{{ torrent_info_hash | lower}}" target="_blank">'
-        '<img src="' + kickassServers[kickassServersIndex][0] + kickassServers[kickassServersIndex][1] + '/torrentwidget/{{ torrent_info_hash | upper}}.png" width="100%"/>'
-        '<br/>'
+      '<a href="https://torrentzeu.to/{{ torrent_info_hash | lower}}" target="_blank">'
         '<img src="http://bitsnoop.com/api/fakeskan.php?img=1&hash={{ torrent_info_hash | upper}}" width="100%"/>'
       '</a>'
       '<br/>'
@@ -292,13 +291,43 @@ rapidpush = {
 }
 
 tasks_static = {
-  '6_SubtitleDownload': {
+  '3_ThePirateBay_HD_Top': {
+    'rss': "https://thepiratebay.org/rss/top100/208",
+    'priority': 3,
+    'verify_ssl_certificates': False
+  },
+  '4_ThePirateBay_HD': {
+    'rss': "https://thepiratebay.org/rss/new/208",
+    'priority': 4,
+    'verify_ssl_certificates': False
+  },
+  '6_ThePirateBay_TOP': {
+    'rss': "https://thepiratebay.org/rss/top100/205",
     'priority': 6,
+    'verify_ssl_certificates': False
+  },
+  '6_EZRSS': {
+    'rss': "https://eztv.ag/ezrss.xml",
+    'priority': 6,
+    'verify_ssl_certificates': False
+  },
+  '7_ExtraTorrent': {
+    'rss': "http://extratorrent.cc/rss.xml?type=today&cid=8",
+    'priority': 7,
+    'verify_ssl_certificates': False
+  },
+  '7_ThePirateBay': {
+    'rss': "https://thepiratebay.org/rss/new/205",
+    'priority': 7,
+    'verify_ssl_certificates': False
+  },
+  '9_SubtitleDownload': {
+    'priority': 9,
     'template': "no_global",
     'disable': "builtins",
-    'find': {
+    'filesystem': {
       'path': [destination],
-      'regexp': ".*\.(avi|mkv|mp4)$",
+      'regexp': ".*\.(mkv|mp4|m4v)$",
       'recursive': True
     },
     'accept_all': True,
@@ -324,7 +353,7 @@ def genTask(show, quality, priority):
                                 , urllib.parse.quote(show)
                                 , quality
                                 , seeds
-                                , ''.join([urllib.parse.quote(" -") + x for x in reject])
+                                , urllib.parse.quote(''.join([" -" + x for x in reject]))
                                 ),
       'priority': priority
       , 'verify_ssl_certificates': False

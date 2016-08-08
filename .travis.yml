@@ -4,6 +4,7 @@ python:
 install:
   - virtualenv $HOME/flexget/
   - cd $HOME/flexget
+  - bin/pip install --upgrade setuptools
   - bin/pip install flexget
   - cd $TRAVIS_BUILD_DIR
   - pip install -r requirements.txt
