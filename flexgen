@@ -43,7 +43,6 @@ require_field = sorted(["quality", "tvdb_id", "tvdb_series_name", "tvdb_ep_id"])
 reject_for = "90 minutes"
 domain_delay = "5 seconds"
 destination = "~/TVShows"
-titleValue = "|\n        {{ tvdb_series_name }} - {{ tvdb_ep_id }}\n        {{ quality }}"
 kickassServersIndex = 5
 kickassServers = [
 ("https://", "kickass.to"),
@@ -76,7 +75,7 @@ trackers = sorted([
 ])
 
 qualities = [("1080p", 1), ("720p", 2), ("", 5)]
-kickass_feed = "{0}{1}/search?q={2}+{3}+{5}+after%3A4W+category%3ATV&fmt=rss"
+kickass_feed = "{0}{1}/search?q={2}+{3}+{5}+after%3A" + str(timedeltadays) + "+category%3ATV&fmt=rss"
 
 confdoc = """# flexgen config file
 # https://github.com/sideeffffect/flexgen
@@ -228,66 +227,9 @@ templates = {
   }
 }
 
-rapidpush = {
-  'title': 'titleValue',
-  'message':
-    '{% if tvdb_banner_url is defined %}'
-      '<a href="http://thetvdb.com/?tab=series&id={{ tvdb_id }}">'
-        '<img src="{{ tvdb_banner_url }}" width="100%"/>'
-      '</a>'
-      '<br/>'
-    '{% else %}'
-      '<p align="center">'
-        '<i>Series banner not available</i>'
-      '</p>'
-    '{% endif %}'
-    '<table border="0" width="100%">'
-      '<tr>'
-        '<td>Name: </td>'
-        '<td align="right">{{ tvdb_ep_name | default("-") }} <br/></td>'
-      '</tr>'
-      '<tr>'
-        '<td>Air date: </td>'
-        '<td align="right">{{ tvdb_ep_air_date.strftime("%A, %-d %B") | default("-") }} <br/></td>'
-      '</tr>'
-      '<tr>'
-        '<td>Delay: </td>'
-        '<td align="right">{% if tvdb_ep_air_date is defined %}{{ (now - tvdb_ep_air_date).days }} days ago{% else %}-{% endif %} <br/></td>'
-      '</tr>'
-      '<tr>'
-        '<td>Runtime: </td>'
-        '<td align="right">{% if tvdb_runtime is defined %}{{ tvdb_runtime }} minutes{% else %}-{% endif %} <br/></td>'
-      '</tr>'
-      '<tr>'
-        '<td>Rating: </td>'
-        '<td align="right">{{ tvdb_ep_rating if tvdb_ep_rating != 0.0 else "-" | default("-") }} <br/></td>'
-      '</tr>'
-    '</table>'
-    '{% if tvdb_ep_image_url is defined %}'
-      '<img src="{{ tvdb_ep_image_url }}" width="100%"/>'
-      '<br/>'
-    '{% else %}'
-      '<p align="center">'
-        '<i>Episode image not available</i>'
-      '</p>'
-    '{% endif %}'
-    '<p align="center">'
-      '<a href="https://torrentzeu.to/{{ torrent_info_hash | lower}}" target="_blank">'
-        '<img src="http://bitsnoop.com/api/fakeskan.php?img=1&hash={{ torrent_info_hash | upper}}" width="100%"/>'
-      '</a>'
-      '<br/>'
-      '{{ task }}'
-      '<br/>'
-      '<font face="Droid Sans Mono" size="0.5">'
-        '{{ title }}'
-        '<br/>'
-        '{{ torrent_info_hash | lower}}'
-      '</font>'
-      '<br/>'
-      '<font face="Droid Sans Mono">'
-        '{{ content_size | round | int }} MB'
-      '</font>'
-    '</p>'
+email = {
+    'subject': '[FlexGet] {{ task.name }}'
+  , 'template': 'html'
 }
 
 tasks_static = {
@@ -369,14 +311,27 @@ tasks = {
 config = unify(templates, tasks)
 
 
-if (type(confdict['rapidpushApiKey']) is str) and (len(confdict['rapidpushApiKey']) == 64):
-  rapidpush['apikey'] = confdict['rapidpushApiKey']
-  config['templates']['global']['rapidpush'] = rapidpush
+if     ('email_from'          in confdict) and (type(confdict['email_from'         ]) is str ) and (len(confdict['email_from'         ]) > 0) \
+   and ('email_to'            in confdict) and (type(confdict['email_to'           ]) is str ) and (len(confdict['email_to'           ]) > 0) \
+   and ('email_smtp_host'     in confdict) and (type(confdict['email_smtp_host'    ]) is str ) and (len(confdict['email_smtp_host'    ]) > 0) \
+   and ('email_smtp_port'     in confdict) and (type(confdict['email_smtp_port'    ]) is int ) and (confdict['email_smtp_port'        ]  > 0) \
+   and ('email_smtp_username' in confdict) and (type(confdict['email_smtp_username']) is str ) and (len(confdict['email_smtp_username']) > 0) \
+   and ('email_smtp_password' in confdict) and (type(confdict['email_smtp_password']) is str ) and (len(confdict['email_smtp_password']) > 0) \
+   and ('email_smtp_ssl'      in confdict) and (type(confdict['email_smtp_ssl'     ]) is bool) \
+  :
+  email['from'         ] = confdict['email_from']
+  email['to'           ] = confdict['email_to']
+  email['smtp_host'    ] = confdict['email_smtp_host']
+  email['smtp_port'    ] = confdict['email_smtp_port']
+  email['smtp_username'] = confdict['email_smtp_username']
+  email['smtp_password'] = confdict['email_smtp_password']
+  email['smtp_ssl'     ] = confdict['email_smtp_ssl']
+  config['templates']['global']['email'] = email
 else:
-  sys.stderr.write("Not using rapidpush, '{0}' is not an rapidpushApiKey.\n".format(confdict['rapidpushApiKey']))
+  sys.stderr.write("Not using email.\n")
 
 
-print(yaml.dump(config, default_flow_style=False, width=99999999).replace('titleValue', titleValue))
+print(yaml.dump(config, default_flow_style=False, width=99999999))
 
 if not os.path.exists(os.path.expanduser(destination)):
   os.mkdir(os.path.expanduser(destination))
