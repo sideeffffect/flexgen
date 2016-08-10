@@ -80,40 +80,37 @@ kickass_feed = "{0}{1}/search?q={2}+{3}+{5}+after%3A" + str(timedeltadays) + "+c
 confdoc = """# flexgen config file
 # https://github.com/sideeffffect/flexgen
 #
-# waitForQuality       the video quality to wait for
-#                      1080p or 720p
-#                      http://flexget.com/wiki/Plugins/quality
-#
-# waitingTime          time to wait before resorting to a worse quality video
-#                      "6 days", "13 hours", and so on
-#                      http://flexget.com/wiki/Plugins/series/timeframe
-#
-# subtitleLanguage     language for subtitles to download
-#                      3 character code
-#                      https://en.wikipedia.org/wiki/ISO_639-3
-#
-# rapidpushApiKey      API key for the RapidPush service
-#                      64 alphanumeric characters
-#                      https://rapidpush.net/
-#
 # shows                list of shows
 #                      put here the names of the TV shows that you want to be torrenting
 #                      names should adhere to http://thetvdb.com/
 #
+# waitForQuality       the video quality to wait for
+#                      OPTIONAL, default: 1080p
+#                      http://flexget.com/Plugins/quality
+#
+# waitingTime          time to wait before resorting to a worse quality video
+#                      OPTIONAL, default: 6 days
+#                      http://flexget.com/Plugins/series/timeframe
+#
+# subtitleLanguage     language for subtitles to download
+#                      OPTIONAL, default: eng
+#                      https://en.wikipedia.org/wiki/ISO_639-3
+#
+# email                specify parameters for sending notifications via email
+#                      OPTIONAL, fields: from, to, smtp_host, smtp_port, smtp_username, smtp_password, ...
+#                      http://flexget.com/Plugins/email
+#
 
 """
 
-confDictDefault = {
-  'waitForQuality'   : "1080p",
-  'waitingTime'      : "6 days",
-  'subtitleLanguage' : "eng",
-  'rapidpushApiKey'  : "keyNotSpecified",
-  'shows'            : [
-    "Pioneer One",
-    "My Favorite Show",
-    "Another TV Show"
-  ]
-}
+confDictDefault = { 'shows': [ "Pioneer One"
+                             , "My Favorite Show"
+                             , "Another TV Show"
+                             ]
+                  , 'waitForQuality': "1080p"
+                  , 'waitingTime': "6 days"
+                  , 'subtitleLanguage': "eng"
+                  }
 
 configFileName = os.path.expanduser("~/.config/flexgen.yml")
 
@@ -228,8 +225,7 @@ templates = {
 }
 
 email = {
-    'subject': '[FlexGet] {{ task.name }}'
-  , 'template': 'html'
+  'subject': '[FlexgetTask] {{ task.name }}'
 }
 
 tasks_static = {
@@ -311,22 +307,8 @@ tasks = {
 config = unify(templates, tasks)
 
 
-if     ('email_from'          in confdict) and (type(confdict['email_from'         ]) is str ) and (len(confdict['email_from'         ]) > 0) \
-   and ('email_to'            in confdict) and (type(confdict['email_to'           ]) is str ) and (len(confdict['email_to'           ]) > 0) \
-   and ('email_smtp_host'     in confdict) and (type(confdict['email_smtp_host'    ]) is str ) and (len(confdict['email_smtp_host'    ]) > 0) \
-   and ('email_smtp_port'     in confdict) and (type(confdict['email_smtp_port'    ]) is int ) and (confdict['email_smtp_port'        ]  > 0) \
-   and ('email_smtp_username' in confdict) and (type(confdict['email_smtp_username']) is str ) and (len(confdict['email_smtp_username']) > 0) \
-   and ('email_smtp_password' in confdict) and (type(confdict['email_smtp_password']) is str ) and (len(confdict['email_smtp_password']) > 0) \
-   and ('email_smtp_ssl'      in confdict) and (type(confdict['email_smtp_ssl'     ]) is bool) \
-  :
-  email['from'         ] = confdict['email_from']
-  email['to'           ] = confdict['email_to']
-  email['smtp_host'    ] = confdict['email_smtp_host']
-  email['smtp_port'    ] = confdict['email_smtp_port']
-  email['smtp_username'] = confdict['email_smtp_username']
-  email['smtp_password'] = confdict['email_smtp_password']
-  email['smtp_ssl'     ] = confdict['email_smtp_ssl']
-  config['templates']['global']['email'] = email
+if 'email' in confdict:
+  config['templates']['global']['email'] = unify(email, confdict['email'])
 else:
   sys.stderr.write("Not using email.\n")
 

@@ -2,12 +2,12 @@ flexgen
 =======
 [![Build Status](https://travis-ci.org/sideeffffect/flexgen.svg)](https://travis-ci.org/sideeffffect/flexgen)
 
-flexgen generates sophisticated FlexGet configuration for a given list of TV shows.
+flexgen generates sophisticated [FlexGet](http://flexget.com/) configuration for a given list of TV shows.
 
 Installation
 -------------
 
-Install Python 3 and Deluge torrent client. Optionaly you can also use [RapidPush](https://rapidpush.net/) to get updates to your phone.
+Install Python 3 and Deluge torrent client. Optionaly you can also have emails sent as notifications about new downloads.
 
 Put `flexgen` in your `PATH`. Notice, that `pip` by default installs to `/usr/local/bin` which might not be in `PATH` in the invironment where `cron` runs. One way to solve this is to create a symlink:
 
@@ -40,28 +40,27 @@ Sample config file `~/.config/flexgen.yml` with comments
 # flexgen config file
 # https://github.com/sideeffffect/flexgen
 #
-# waitForQuality       the video quality to wait for
-#                      1080p or 720p
-#                      http://flexget.com/wiki/Plugins/quality
-#
-# waitingTime          time to wait before resorting to a worse quality video
-#                      "6 days", "13 hours", and so on
-#                      http://flexget.com/wiki/Plugins/series/timeframe
-#
-# subtitleLanguage     language for subtitles to download
-#                      3 character code
-#                      https://en.wikipedia.org/wiki/ISO_639-3
-#
-# rapidpushApiKey      API key for the RapidPush service
-#                      64 alphanumeric characters
-#                      https://rapidpush.net/
-#
 # shows                list of shows
 #                      put here the names of the TV shows that you want to be torrenting
 #                      names should adhere to http://thetvdb.com/
 #
+# waitForQuality       the video quality to wait for
+#                      OPTIONAL, default: 1080p
+#                      http://flexget.com/Plugins/quality
+#
+# waitingTime          time to wait before resorting to a worse quality video
+#                      OPTIONAL, default: 6 days
+#                      http://flexget.com/Plugins/series/timeframe
+#
+# subtitleLanguage     language for subtitles to download
+#                      OPTIONAL, default: eng
+#                      https://en.wikipedia.org/wiki/ISO_639-3
+#
+# email                specify parameters for sending notifications via email
+#                      OPTIONAL, fields: from, to, smtp_host, smtp_port, smtp_username, smtp_password, ...
+#                      http://flexget.com/Plugins/email
+#
 
-rapidpushApiKey: keyNotSpecified
 shows:
 - Pioneer One
 - My Favorite Show
@@ -74,7 +73,7 @@ waitingTime: 6 days
 
 License
 ------------
-Copyright (c) 2014, 2015 Ondra Pelech
+Copyright (c) 2014, 2015, 2016 Ondra Pelech
 
 License GPL-3.0+
 
