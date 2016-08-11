@@ -225,7 +225,7 @@ templates = {
 }
 
 email = {
-  'subject': '[FlexgetTask] {{ task.name }}'
+  'subject': '[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvdb_series_name }} - {{ entry.tvdb_ep_id }} - {{ entry.quality }}{% endfor %}'
 }
 
 tasks_static = {

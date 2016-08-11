@@ -1,0 +1,76 @@
+{% if task.accepted -%}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvdb_series_name }} - {{ entry.tvdb_ep_id }} - {{ entry.quality }}{% endfor %}</title>
+  </head>
+  <body>
+    {% for entry in task.accepted %}
+    <p>
+      <h1>{{ entry.tvdb_series_name }}</h1>
+      <h2>{{ entry.tvdb_ep_id }}</h2>
+      <h3>{{ entry.quality }}</h3>
+      {% if entry.tvdb_banner is defined %}
+      <a href="{{ entry.tvdb_url }}">
+        <img src="{{ entry.tvdb_banner }}" width="100%"/>
+      </a>
+      <br/>
+      {% else %}
+      <p align="center">
+        <i>Series banner not available</i>
+      </p>
+      {% endif %}
+      <table border="0" width="100%">
+        <tr>
+          <td>Name: </td>
+          <td align="right">{{ entry.tvdb_ep_name | default("-") }} <br/></td>
+        </tr>
+        <tr>
+          <td>Air date: </td>
+          <td align="right">{{ entry.tvdb_ep_air_date.strftime("%A, %-d %B") | default("-") }} <br/></td>
+        </tr>
+        <tr>
+          <td>Delay: </td>
+          <td align="right">{% if (entry.tvdb_ep_air_date is defined) and (now is defined) %}{{ (now - entry.tvdb_ep_air_date).days }} days ago{% else %}-{% endif %} <br/></td>
+        </tr>
+        <tr>
+          <td>Runtime: </td>
+          <td align="right">{% if entry.tvdb_runtime is defined %}{{ entry.tvdb_runtime }} minutes{% else %}-{% endif %} <br/></td>
+        </tr>
+        <tr>
+          <td>Rating: </td>
+          <td align="right">{{ entry.tvdb_ep_rating if entry.tvdb_ep_rating != 0.0 else "-" | default("-") }} <br/></td>
+        </tr>
+      </table>
+      {% if entry.tvdb_ep_image is defined %}
+      <img src="{{ entry.tvdb_ep_image }}" width="100%"/>
+      <br/>
+      {% else %}
+      <p align="center">
+        <i>Episode image not available</i>
+      </p>
+      {% endif %}
+      <p align="center">
+        <a href="https://torrentzeu.to/{{ entry.torrent_info_hash | lower}}" target="_blank">
+          <img src="http://bitsnoop.com/api/fakeskan.php?img=1&hash={{ entry.torrent_info_hash | upper}}" width="100%"/>
+          <p align="center">
+            {{ task.title }}
+            <br/>
+            <font face="monospace" size="0.5">
+              {{ entry.title }}
+              <br/>
+              {{ entry.torrent_info_hash | lower}}
+            </font>
+            <br/>
+            <font face="monospace">
+              {{ entry.content_size | round | int }} MB
+            </font>
+          </p>
+        </a>
+      </p>
+    </p>
+    {% endfor %}
+  </body>
+</html>
+{% endif %}
