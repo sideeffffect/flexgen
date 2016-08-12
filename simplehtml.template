@@ -4,23 +4,50 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvdb_series_name }} - {{ entry.tvdb_ep_id }} - {{ entry.quality }}{% endfor %}</title>
+    {% if task.accepted[0].tvdb_posters %}
+    <style type="text/css">
+body {
+  color: white;
+}
+.description {
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.9) 100%), url("{{task.accepted[0].tvdb_posters[0]}}");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+p {
+  margin: 0px;
+}
+h1 {
+  margin-top: 0px;
+  padding-top: 0.67em;
+}
+.torrent {
+  margin: 0px;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+    </style>
+    {% endif %}
   </head>
   <body>
     {% for entry in task.accepted %}
-    <p>
-      <h1>{{ entry.tvdb_series_name }}</h1>
-      <h2>{{ entry.tvdb_ep_id }}</h2>
-      <h3>{{ entry.quality }}</h3>
-      {% if entry.tvdb_banner is defined %}
-      <a href="{{ entry.tvdb_url }}">
-        <img src="{{ entry.tvdb_banner }}" width="100%"/>
-      </a>
-      <br/>
-      {% else %}
+
       <p align="center">
+        {% if entry.tvdb_banner is defined %}
+        <a href="{{ entry.tvdb_url }}">
+          <img src="{{ entry.tvdb_banner }}" width="100%" alt="tvdb_banner"/>
+        </a>
+        {% else %}
         <i>Series banner not available</i>
+        {% endif %}
       </p>
-      {% endif %}
+
+    <div class="description">
+
+      <h1 align="center">{{ entry.tvdb_series_name }}</h1>
+      <h2 align="center"><font face="monospace">{{ entry.tvdb_ep_id }}</font></h2>
+      <h3 align="center"><font face="monospace">{{ entry.quality }}</font></h3>
+
       <table border="0" width="100%">
         <tr>
           <td>Name: </td>
@@ -42,34 +69,38 @@
           <td>Rating: </td>
           <td align="right">{{ entry.tvdb_ep_rating if entry.tvdb_ep_rating != 0.0 else "-" | default("-") }} <br/></td>
         </tr>
+        <tr>
+          <td>Size: </td>
+          <td align="right">{{ entry.content_size | round | int }} MB <br/></td>
+        </tr>
+        <tr>
+          <td>Task: </td>
+          <td align="right"><font face="monospace">{{ task.name }}</font> <br/></td>
+        </tr>
       </table>
-      {% if entry.tvdb_ep_image is defined %}
-      <img src="{{ entry.tvdb_ep_image }}" width="100%"/>
-      <br/>
-      {% else %}
-      <p align="center">
-        <i>Episode image not available</i>
-      </p>
-      {% endif %}
-      <p align="center">
+
+      <p align="center" class="torrent">
         <a href="https://torrentzeu.to/{{ entry.torrent_info_hash | lower}}" target="_blank">
-          <img src="http://bitsnoop.com/api/fakeskan.php?img=1&hash={{ entry.torrent_info_hash | upper}}" width="100%"/>
-          <p align="center">
-            {{ task.title }}
-            <br/>
-            <font face="monospace" size="0.5">
+          <font face="monospace">
+            <font size="0.5">
               {{ entry.title }}
               <br/>
               {{ entry.torrent_info_hash | lower}}
             </font>
-            <br/>
-            <font face="monospace">
-              {{ entry.content_size | round | int }} MB
-            </font>
-          </p>
+          </font>
         </a>
       </p>
+
+    </div>
+
+    <p align="center">
+      {% if entry.tvdb_ep_image is defined %}
+      <img src="{{ entry.tvdb_ep_image }}" width="100%" alt="tvdb_ep_image"/>
+      {% else %}
+      <i>Episode image not available</i>
+      {% endif %}
     </p>
+
     {% endfor %}
   </body>
 </html>
