@@ -259,6 +259,11 @@ tasks_static = {
     'priority': 7,
     'verify_ssl_certificates': False
   },
+  '7_RARBG': {
+    'rss': "https://rarbg.to/rss.php",
+    'priority': 7,
+    'verify_ssl_certificates': False
+  },
   '9_SubtitleDownload': {
     'priority': 9,
     'template': "no_global",
