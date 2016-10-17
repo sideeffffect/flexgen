@@ -6,11 +6,8 @@
     <title>[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvdb_series_name }} - {{ entry.tvdb_ep_id }} - {{ entry.quality }}{% endfor %}</title>
     {% if task.accepted[0].tvdb_posters %}
     <style type="text/css">
-body {
-  color: white;
-}
 .description {
-  background-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.9) 100%), url("{{task.accepted[0].tvdb_posters[0]}}");
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.9) 0%,rgba(255,255,255,0.9) 100%), url("{{task.accepted[0].tvdb_posters[0]}}");
   background-size: 100%;
   background-repeat: no-repeat;
 }
