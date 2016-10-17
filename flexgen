@@ -186,7 +186,7 @@ templates = {
         'reject': content_reject
       },
       'regexp': {
-        'reject': [{"\b{0}\b".format(r) : {'from': 'title'}} for r in reject]
+        'reject': [{"\\b{0}\\b".format(r) : {'from': 'title'}} for r in reject]
       },
       'require_field': require_field,
       'content_size': {
