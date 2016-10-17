@@ -53,25 +53,14 @@ kickassServers = [
 , ("https://", "zooqle.com")
 ]
 domains = sorted([
-"rapidpush.net",
 "tracker.openbittorrent.com",
 "tracker.publicbt.com",
-"tracker.istole.it",
-"open.demonii.com",
-"inferno.demonoid.ph",
-"tracker.btzoo.eu",
-"coppersurfer.tk",
-"9.rarbg.com"
+"tracker.istole.it"
 ] + [ks[1] for ks in kickassServers])
 trackers = sorted([
 "udp://tracker.openbittorrent.com:80/announce",
 "udp://tracker.publicbt.com:80/announce",
-"udp://tracker.istole.it:80/announce",
-"udp://open.demonii.com:1337/announce",
-"http://inferno.demonoid.ph:3389/announce",
-"udp://tracker.btzoo.eu:80/announce",
-"udp://coppersurfer.tk:6969/announce",
-"http://9.rarbg.com:2710/announce"
+"udp://tracker.istole.it:80/announce"
 ])
 
 qualities = [("1080p", 1), ("720p", 2), ("", 5)]
