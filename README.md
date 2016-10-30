@@ -30,6 +30,13 @@ LANG=en_US.utf8
 
 Here I assume, that your `flexget` config file is in `$HOME/.config/flexget`, so change this part if necessary.
 
+Use the email template:
+
+```
+mkdir -p ~/.config/flexget/templates
+ln -s ~/Projects/flexgen/simplehtml.template ~/.config/flexget/templates/simplehtml.template
+```
+
 
 Configuration
 -------------
