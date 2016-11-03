@@ -77,16 +77,34 @@ h1 {
       </table>
 
       <p align="center" class="torrent">
-        <a href="https://torrentz2.eu/{{ entry.torrent_info_hash | lower}}" target="_blank">
-          <font face="monospace">
-            <font size="0.5">
-              {{ entry.title }}
-              <br/>
-              {{ entry.torrent_info_hash | lower}}
-            </font>
-          </font>
-        </a>
+        <font face="monospace" size="0.5">
+          {{ entry.title }}
+          <br/>
+          {{ entry.torrent_info_hash | lower}}
+        </font>
       </p>
+
+      <table border="0" width="100%">
+        <tr>
+          <td align="center" width="33%">
+            <a href="https://torrentz2.eu/{{ entry.torrent_info_hash | lower}}" target="_blank">
+              <img src="https://torrentz2.eu/favicon.ico" width="33%" alt="torrentz2 icon"/>
+            </a>
+          </td>
+          <td align="center" width="33%">
+            <a href="https://zooqle.com/search?q={{ entry.torrent_info_hash | lower}}" target="_blank">
+              <img src="https://zooqle.com/img/zq-favicon32.png" width="33%" alt="zooqle icon"/>
+            </a>
+          </td>
+          <td align="center" width="33%">
+            <a href="https://torrentproject.se/{{ entry.torrent_info_hash | lower}}" target="_blank">
+              <img src="https://torrentproject.se/favicon.ico" width="33%" alt="torrentproject icon"/>
+            </a>
+          </td>
+        </tr>
+      </table>
+      
+      <br/>
 
     </div>
 
