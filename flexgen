@@ -244,11 +244,6 @@ tasks_static = {
     'priority': 6,
     'verify_ssl_certificates': False
   },
-  '7_ExtraTorrent': {
-    'rss': "http://extratorrent.cc/rss.xml?type=today&cid=8",
-    'priority': 7,
-    'verify_ssl_certificates': False
-  },
   '7_ThePirateBay': {
     'rss': "https://thepiratebay.org/rss/new/205",
     'priority': 7,
