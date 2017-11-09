@@ -32,9 +32,6 @@ reject = sorted([ "1080i"
                 , "WEBsct"
                 , "3D"
                 , "VOSTFR"
-                , "HEVC"
-                , "h265"
-                , "x265"
                 ])
 content_require = sorted(["*.mkv", "*.mp4"])
 content_reject = sorted(["*password*", "*.avi", "*.wmv", "*.mpg", "*.r0*", "*.part0*"])
