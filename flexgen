@@ -54,16 +54,12 @@ domains = sorted([
 , "tracker.leechers-paradise.org"
 , "tracker.opentrackr.org"
 , "tracker.mg64.net"
-, "mgtracker.org"
-, "explodie.org"
 ] + [ks[1] for ks in kickassServers])
 trackers = sorted([
   "udp://tracker.coppersurfer.tk:6969"
 , "udp://tracker.leechers-paradise.org:6969"
 , "udp://tracker.opentrackr.org:1337"
 , "http://tracker.mg64.net:6881/announce"
-, "http://mgtracker.org:2710/announce"
-, "http://explodie.org:6969/announce"
 ])
 
 qualities = [("1080p", 1), ("720p", 2), ("", 5)]
@@ -216,10 +212,6 @@ templates = {
   }
 }
 
-email = {
-  'subject': '[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvdb_series_name }} - {{ entry.tvdb_ep_id }} - {{ entry.quality }}{% endfor %}'
-}
-
 tasks_static = {
   '3_ThePirateBay_HD_Top': {
     'rss': "https://thepiratebay.org/rss/top100/208",
@@ -300,7 +292,7 @@ config = unify(templates, tasks)
 
 
 if 'email' in confdict:
-  config['templates']['global']['email'] = unify(email, confdict['email'])
+  config['templates']['global']['notify'] = {'task': {'template': "simplehtml", 'via': [{'email': confdict['email']}]}}
 else:
   sys.stderr.write("Not using email.\n")
 
