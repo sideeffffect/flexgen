@@ -292,7 +292,18 @@ config = unify(templates, tasks)
 
 
 if 'email' in confdict:
-  config['templates']['global']['notify'] = {'task': {'template': "simplehtml", 'via': [{'email': confdict['email']}]}}
+  notify = {
+    'task': {
+      'template': "simplehtml",
+      'title': '[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvdb_series_name }} - {{ entry.tvdb_ep_id }} - {{ entry.quality }}{% endfor %}',
+      'via': [
+        {
+          'email': unify({'html': True}, confdict['email'])
+        }
+      ]
+    }
+  }
+  config['templates']['global']['notify'] = notify
 else:
   sys.stderr.write("Not using email.\n")
 
