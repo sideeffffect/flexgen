@@ -183,7 +183,7 @@ templates = {
         'strict': False
       },
       'if': [
-        {"(tvdb_ep_air_date is not None) and (tvdb_ep_air_date < now - timedelta(days={0}))".format(timedeltadays): 'reject'}
+        {"tvdb_ep_air_date < now - timedelta(days={0})".format(timedeltadays): 'reject'}
       ],
       'pathscrub': "windows",
       'magnets': False,
