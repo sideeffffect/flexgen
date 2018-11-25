@@ -68,7 +68,7 @@ h1 {
         </tr>
         <tr>
           <td>Size: </td>
-          <td align="right">{{ entry.content_size | round | int }} MB <br/></td>
+          <td align="right">{% if entry.content_size is defined %}{{ entry.content_size | round | int }} MB{% else %}-{% endif %} <br/></td>
         </tr>
         <tr>
           <td>Task: </td>
@@ -88,7 +88,7 @@ h1 {
         <tr>
           <td align="center" width="33%">
             <a href="https://torrentz2.eu/{{ entry.torrent_info_hash | lower}}" target="_blank">
-              <img src="https://torrentz2.eu/favicon.ico" width="33%" alt="torrentz2 icon"/>
+              <img src="https://cdn.cybrhome.com/media/topic/live/icon/topic_icon_torrent-search-engines_c7ee60.png" width="33%" alt="torrentz2 icon"/>
             </a>
           </td>
           <td align="center" width="33%">
@@ -97,8 +97,8 @@ h1 {
             </a>
           </td>
           <td align="center" width="33%">
-            <a href="https://torrentproject.se/{{ entry.torrent_info_hash | lower}}" target="_blank">
-              <img src="https://torrentproject.se/favicon.ico" width="33%" alt="torrentproject icon"/>
+            <a href="https://www.google.com/search?q={{ entry.torrent_info_hash | lower}}" target="_blank">
+              <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" width="33%" alt="google icon"/>
             </a>
           </td>
         </tr>
