@@ -224,6 +224,11 @@ tasks_static = {
     'priority': 4,
     'verify_ssl_certificates': False
   },
+  '4_RARBG_HD': {
+    'rss': "https://rarbg.to/rssdd.php?category=41",
+    'priority': 4,
+    'verify_ssl_certificates': False
+  },
   '6_ThePirateBay_TOP': {
     'rss': "https://thepiratebay.org/rss/top100/205",
     'priority': 6,
@@ -245,7 +250,7 @@ tasks_static = {
     'verify_ssl_certificates': False
   },
   '7_RARBG': {
-    'rss': "https://rarbg.to/rss.php",
+    'rss': "https://rarbg.to/rssdd.php?category=18",
     'priority': 7,
     'verify_ssl_certificates': False
   },
