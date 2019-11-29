@@ -3,11 +3,11 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvdb_series_name }} - {{ entry.tvdb_ep_id }} - {{ entry.quality }}{% endfor %}</title>
-    {% if task.accepted[0].tvdb_posters %}
+    <title>[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvmaze_series_name }} - {{ entry.tvmaze_episode_id }} - {{ entry.quality }}{% endfor %}</title>
+    {% if task.accepted[0].tvmaze_series_medium_image %}
     <style type="text/css">
 .description {
-  background-image: linear-gradient(to bottom, rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.75) 100%), url("{{task.accepted[0].tvdb_posters[0]}}");
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.75) 100%), url("{{task.accepted[0].tvmaze_series_medium_image}}");
   background-size: 100%;
   background-repeat: no-repeat;
 }
@@ -31,7 +31,7 @@ h1 {
 
       <p align="center">
         {% if entry.tvdb_banner is defined %}
-        <a href="{{ entry.tvdb_url }}">
+        <a href="{{ entry.tvmaze_episode_url }}">
           <img src="{{ entry.tvdb_banner }}" width="100%" alt="tvdb_banner"/>
         </a>
         {% else %}
@@ -41,30 +41,30 @@ h1 {
 
     <div class="description">
 
-      <h1 align="center">{{ entry.tvdb_series_name }}</h1>
-      <h2 align="center"><font face="monospace">{{ entry.tvdb_ep_id }}</font></h2>
+      <h1 align="center">{{ entry.tvmaze_series_name }}</h1>
+      <h2 align="center"><font face="monospace">{{ entry.tvmaze_episode_id }}</font></h2>
       <h3 align="center"><font face="monospace">{{ entry.quality }}</font></h3>
 
       <table border="0" width="100%">
         <tr>
           <td>Name: </td>
-          <td align="right">{{ entry.tvdb_ep_name | default("-") }} <br/></td>
+          <td align="right">{{ entry.tvmaze_episode_name | default("-") }} <br/></td>
         </tr>
         <tr>
           <td>Air date: </td>
-          <td align="right">{{ entry.tvdb_ep_air_date.strftime("%A, %-d %B") | default("-") }} <br/></td>
+          <td align="right">{{ entry.tvmaze_episode_airdate.strftime("%A, %-d %B") | default("-") }} <br/></td>
         </tr>
         <tr>
           <td>Delay: </td>
-          <td align="right">{% if (entry.tvdb_ep_air_date is defined) and (now is defined) %}{{ (now - entry.tvdb_ep_air_date).days }} days ago{% else %}-{% endif %} <br/></td>
+          <td align="right">{% if (entry.tvmaze_episode_airdate is defined) and (now is defined) %}{{ (now - entry.tvmaze_episode_airdate).days }} days ago{% else %}-{% endif %} <br/></td>
         </tr>
         <tr>
           <td>Runtime: </td>
-          <td align="right">{% if entry.tvdb_runtime is defined %}{{ entry.tvdb_runtime }} minutes{% else %}-{% endif %} <br/></td>
+          <td align="right">{% if entry.tvmaze_ep_runtime is defined %}{{ entry.tvmaze_ep_runtime }} minutes{% else %}-{% endif %} <br/></td>
         </tr>
         <tr>
           <td>Rating: </td>
-          <td align="right">{{ entry.tvdb_ep_rating if entry.tvdb_ep_rating != 0.0 else "-" | default("-") }} <br/></td>
+          <td align="right">{{ entry.tvmaze_series_rating if entry.tvmaze_series_rating != 0.0 else "-" | default("-") }} <br/></td>
         </tr>
         <tr>
           <td>Size: </td>
@@ -109,8 +109,8 @@ h1 {
     </div>
 
     <p align="center">
-      {% if entry.tvdb_ep_image is defined %}
-      <img src="{{ entry.tvdb_ep_image }}" width="100%" alt="tvdb_ep_image"/>
+      {% if entry.tvmaze_episode_medium_image is defined %}
+      <img src="{{ entry.tvmaze_episode_medium_image }}" width="100%" alt="tvmaze_episode_medium_image"/>
       {% else %}
       <i>Episode image not available</i>
       {% endif %}

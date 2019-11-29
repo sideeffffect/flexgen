@@ -191,6 +191,7 @@ templates = {
         'min_seeds': seeds,
         'reject_for': reject_for
       },
+      'thetvdb_lookup': True,
       'tvmaze_lookup': True,
       'deluge': {
         'content_filename':
