@@ -195,12 +195,12 @@ templates = {
       'tvmaze_lookup': True,
       'deluge': {
         'content_filename':
-          '{{  tvmaze_series_name | replace("/", " - ") | replace(";", ",")                                   }}/'
-          'S{{ tvmaze_season      | replace("/", " - ") | replace(";", ",") | pad(2)                          }}/'
-          'S{{ tvmaze_season      | replace("/", " - ") | replace(";", ",") | pad(2)                          }}'
-          'E{{ tvmaze_episode     | replace("/", " - ") | replace(";", ",") | pad(2)                          }} - '
-          '{{  tvmaze_episode_name     | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
-          '{{  quality          | replace("/", " - ") | replace(";", ",")                                   }}',
+          '{{  tvmaze_series_name  | replace("/", " - ") | replace(";", ",") | default("Unknown series name")  }}/'
+          'S{{ tvmaze_season       | default(0) | pad(2) }}/'
+          'S{{ tvmaze_season       | default(0) | pad(2) }}'
+          'E{{ tvmaze_episode      | default(0) | pad(2) }} - '
+          '{{  tvmaze_episode_name | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
+          '{{  quality             | replace("/", " - ") | replace(";", ",")                                   }}',
         'main_file_only': True,
         'hide_sparse_files': True,
         'path': destination
