@@ -36,7 +36,7 @@ reject = sorted([ "1080i"
 content_require = sorted(["*.mkv", "*.mp4"])
 content_reject = sorted(["*password*", "*.avi", "*.wmv", "*.mpg", "*.r0*", "*.part0*"])
 free_space = 20000
-require_field = sorted(["quality", "tvdb_id", "tvmaze_series_name", "tvmaze_episode_id"])
+require_field = sorted(["quality", "tvdb_id"])
 reject_for = "90 minutes"
 domain_delay = "5 seconds"
 destination = "~/TVShows"
@@ -196,9 +196,8 @@ templates = {
       'deluge': {
         'content_filename':
           '{{  tvmaze_series_name  | replace("/", " - ") | replace(";", ",") | default("Unknown series name")  }}/'
-          'S{{ tvmaze_season       | default(0) | pad(2) }}/'
-          'S{{ tvmaze_season       | default(0) | pad(2) }}'
-          'E{{ tvmaze_episode      | default(0) | pad(2) }} - '
+          'S{% if series_season is defined %}{{ series_season  | pad(2) }}{% else %}00{% endif %}/'
+          '{% if series_id is defined %}{{ series_id }}{% else %}S00E00{% endif %} - '
           '{{  tvmaze_episode_name | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
           '{{  quality             | replace("/", " - ") | replace(";", ",")                                   }}',
         'main_file_only': True,
@@ -309,7 +308,7 @@ if 'email' in confdict:
   notify = {
     'task': {
       'template': "simplehtml",
-      'title': '[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvmaze_series_name }} - {{ entry.tvmaze_episode_id }} - {{ entry.quality }}{% endfor %}',
+      'title': '[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvmaze_series_name }} - {{ entry.series_id }} - {{ entry.quality }}{% endfor %}',
       'via': [
         {
           'email': unify({'html': True}, confdict['email'])

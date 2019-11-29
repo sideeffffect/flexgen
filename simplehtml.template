@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvmaze_series_name }} - {{ entry.tvmaze_episode_id }} - {{ entry.quality }}{% endfor %}</title>
+    <title>[FlexgetTask] {% set comma = joiner(", ") %}{% for entry in task.accepted %}{{ comma() }}{{ entry.tvmaze_series_name }} - {{ entry.series_id }} - {{ entry.quality }}{% endfor %}</title>
     {% if task.accepted[0].tvmaze_series_medium_image %}
     <style type="text/css">
 .description {
@@ -31,7 +31,7 @@ h1 {
 
       <p align="center">
         {% if entry.tvdb_banner is defined %}
-        <a href="{{ entry.tvmaze_episode_url }}">
+        <a href="{{ entry.tvmaze_series_url }}">
           <img src="{{ entry.tvdb_banner }}" width="100%" alt="tvdb_banner"/>
         </a>
         {% else %}
@@ -42,7 +42,7 @@ h1 {
     <div class="description">
 
       <h1 align="center">{{ entry.tvmaze_series_name }}</h1>
-      <h2 align="center"><font face="monospace">{{ entry.tvmaze_episode_id }}</font></h2>
+      <h2 align="center"><font face="monospace">{{ entry.series_id }}</font></h2>
       <h3 align="center"><font face="monospace">{{ entry.quality }}</font></h3>
 
       <table border="0" width="100%">
@@ -110,7 +110,9 @@ h1 {
 
     <p align="center">
       {% if entry.tvmaze_episode_medium_image is defined %}
-      <img src="{{ entry.tvmaze_episode_medium_image }}" width="100%" alt="tvmaze_episode_medium_image"/>
+      <a href="{{ entry.tvmaze_episode_url }}">
+        <img src="{{ entry.tvmaze_episode_medium_image }}" width="100%" alt="tvmaze_episode_medium_image"/>
+      </a>
       {% else %}
       <i>Episode image not available</i>
       {% endif %}
