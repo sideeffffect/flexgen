@@ -202,8 +202,8 @@ templates = {
           '{{  quality          | replace("/", " - ") | replace(";", ",")                                   }}',
         'main_file_only': True,
         'hide_sparse_files': True,
-        'path': destination,
-        'movedone': destination
+        'path': destination
+#        'movedone': destination
       },
       'domain_delay': {
         d: domain_delay for d in domains
