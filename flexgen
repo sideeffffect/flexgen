@@ -39,6 +39,7 @@ free_space = 20000
 require_field = sorted(["quality", "tvdb_id"])
 reject_for = "90 minutes"
 domain_delay = "5 seconds"
+destinationTmp = "~/Downloads/.traffic"
 destination = "~/TVShows"
 kickassServersIndex = 5
 kickassServers = [
@@ -201,9 +202,9 @@ templates = {
           '{{  tvmaze_episode_name | replace("/", " - ") | replace(";", ",") | default("Unknown episode name") }} - '
           '{{  quality             | replace("/", " - ") | replace(";", ",")                                   }}',
         'main_file_only': True,
-        'hide_sparse_files': True,
-        'path': destination
-#        'movedone': destination
+        'path': destinationTmp,
+        'move_completed_path': destination,
+        'magnetization_timeout': 50
       },
       'domain_delay': {
         d: domain_delay for d in domains
